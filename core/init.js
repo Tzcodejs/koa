@@ -11,10 +11,11 @@ class InitManager{
     static initLoadRouters(){
         // 可以通过process.cwd()拿到绝对路径
         const apiDirectory = `${process.cwd()}/app/api`
-        requireDirectory(module, '../app/api',{
+        requireDirectory(module, apiDirectory,{
             visit:whenLoadMoule
         })
         
+        // 循环注册路由
         function whenLoadMoule(){
             if(obj instanceof Router){
                 InitManager.app.use(obj.routes())
