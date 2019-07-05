@@ -9,6 +9,11 @@ const catchError = async (ctx, next) => {
     // message
     // error_code
     // request_url
+    // 判断是生产环境还是开发环境
+    if(global.config.environment === 'dev'){
+      throw error
+    }
+    
     if(error instanceof HttpException){
       // 已知异常
       ctx.body = {

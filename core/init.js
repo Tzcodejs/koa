@@ -1,4 +1,4 @@
-const requireDirectory = require('requireDirectory')
+const requireDirectory = require('require-directory')
 const Router = require('koa-router')
 
 class InitManager{
@@ -6,6 +6,14 @@ class InitManager{
     static initCore(app){
         InitManager.app = app
         InitManager.initLoadRouters()
+        InitManager.loadConfig()
+    }
+
+    // 导入配置文件
+    static loadConfig(path = ''){
+        const configPath = path || process.cwd() + '/config/config.js'
+        const config = require(configPath)
+        global.config = config
     }
 
     static initLoadRouters(){
@@ -16,7 +24,7 @@ class InitManager{
         })
         
         // 循环注册路由
-        function whenLoadMoule(){
+        function whenLoadMoule(obj){
             if(obj instanceof Router){
                 InitManager.app.use(obj.routes())
             }
