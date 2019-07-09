@@ -10,24 +10,28 @@ const catchError = async (ctx, next) => {
     // error_code
     // request_url
     // 判断是生产环境还是开发环境
-    if(global.config.environment === 'dev'){
+
+    const isHttpException = error instanceof HttpException
+    const isDev = global.config.environment === 'dev'
+
+    if (!isHttpException && isDev) {
       throw error
     }
-    
-    if(error instanceof HttpException){
+
+    if (isHttpException) {
       // 已知异常
       ctx.body = {
-        msg:error.msg,
-        error_code:error.errorCode,
-        request:`${ctx.method} ${ctx.path}`
+        msg: error.msg,
+        error_code: error.errorCode,
+        request: `${ctx.method} ${ctx.path}`
       }
       ctx.status = error.code
-    }else{
+    } else {
       // 未知异常
       ctx.body = {
-        msg:'mistake',
-        error_code:999,
-        request:`${ctx.method} ${ctx.path}`
+        msg: 'mistake',
+        error_code: 999,
+        request: `${ctx.method} ${ctx.path}`
       }
       ctx.status = 500
     }
